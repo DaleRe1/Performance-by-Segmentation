@@ -1,585 +1,1410 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Strategic SaaS Business Review</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-      background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-      min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      padding: 20px;
-    }
-
-    .presentation-container{
-      width: 100%; max-width: 1200px; height: 85vh; background: #fff; border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      display: flex; flex-direction: column; position: relative; overflow: hidden;
-    }
-
-    .slides-wrapper{
-      flex: 1; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth;
-    }
-
-    .slide{ padding: 40px 60px; display: none; animation: fadeIn .5s ease-in-out; }
-    .slide.active{ display: block; }
-
-    @keyframes fadeIn{ from{opacity:0; transform: translateY(20px);} to{opacity:1; transform: translateY(0);} }
-
-    /* NAVIGATION */
-    .navigation{
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 18px 24px; background: #2d3748; border-radius: 0 0 20px 20px; width: 100%;
-    }
-    .nav-button{
-      background: #667eea; color: white; border: none; padding: 12px 22px; border-radius: 10px;
-      font-size: 16px; font-weight: 600; cursor: pointer; transition: all .25s ease; text-transform: uppercase;
-    }
-    .nav-button:hover:not(:disabled){ background:#5a67d8; transform: translateY(-1px); box-shadow: 0 5px 15px rgba(102,126,234,.4); }
-    .nav-button:disabled{ opacity:.35; cursor: not-allowed; }
-
-    .nav-center{ display:flex; gap:14px; align-items:center; justify-content:center; flex:1; }
-    .slide-counter{
-      color:#fff; font-weight:700; font-size:16px; background:#667eea; padding:8px 14px; border-radius:10px; white-space:nowrap;
-    }
-
-    .nav-dots{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:center; }
-    .nav-dot{
-      width:12px; height:12px; border-radius:50%; border:2px solid rgba(255,255,255,.9);
-      background: rgba(255,255,255,.25); cursor:pointer; padding:0; outline:none;
-      transition: transform .15s ease, background .15s ease;
-    }
-    .nav-dot:hover{ transform: scale(1.12); }
-    .nav-dot.active{ background:#fff; }
-
-    .slide-header{ border-bottom:3px solid #667eea; padding-bottom:20px; margin-bottom:40px; }
-    h1{ color:#1a202c; font-size:42px; font-weight:700; margin-bottom:10px; }
-    h2{ color:#2d3748; font-size:32px; font-weight:600; margin-bottom:30px; }
-    h3{ color:#4a5568; font-size:24px; font-weight:600; margin-bottom:20px; }
-    .subtitle{ color:#718096; font-size:18px; font-weight:400; }
-
-    .metrics-grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap:25px; margin:40px 0; }
-    .metric-card{
-      background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); border-radius:15px; padding:25px; color:#fff;
-      transform: translateY(0); transition: all .3s ease;
-    }
-    .metric-card:hover{ transform: translateY(-5px); box-shadow:0 10px 30px rgba(102,126,234,.4);}
-    .metric-label{ font-size:14px; opacity:.9; margin-bottom:8px; }
-    .metric-value{ font-size:32px; font-weight:700; margin-bottom:8px; }
-    .metric-change{ font-size:16px; font-weight:500; }
-    .positive{ color:#48bb78; } .negative{ color:#fc8181; } .neutral{ color:#718096; }
-
-    .chart-container{ background:#f7fafc; border-radius:12px; padding:30px; margin:30px 0; }
-    .data-table{ width:100%; border-collapse:collapse; margin:20px 0; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 6px rgba(0,0,0,.07); }
-    .data-table th{
-      background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:#fff; padding:15px; text-align:left; font-weight:600;
-    }
-    .data-table td{ padding:12px 15px; border-bottom:1px solid #e2e8f0; }
-    .data-table tr:hover{ background:#f7fafc; }
-    .data-table tr:last-child td{ border-bottom:none; }
-    .highlight-row{ background:#fef5e7 !important; font-weight:600; }
-
-    .key-insights{ background:#edf2f7; border-left:4px solid #667eea; padding:20px; margin:30px 0; border-radius:8px; }
-    .key-insights ul{ list-style:none; }
-    .key-insights li{ padding:8px 0; color:#2d3748; position:relative; padding-left:25px; }
-    .key-insights li:before{ content:"▶"; position:absolute; left:0; color:#667eea; }
-
-    .segment-performance{ display:grid; grid-template-columns: repeat(2,1fr); gap:30px; margin:30px 0; }
-    .segment-card{ background:#fff; border:2px solid #e2e8f0; border-radius:12px; padding:25px; transition: all .3s ease; }
-    .segment-card:hover{ border-color:#667eea; box-shadow:0 8px 20px rgba(0,0,0,.08); }
-    .segment-title{ font-size:20px; font-weight:600; color:#2d3748; margin-bottom:15px; }
-    .segment-metrics{ display:grid; grid-template-columns: repeat(2,1fr); gap:15px; }
-    .mini-metric{ padding:10px; background:#f7fafc; border-radius:8px; }
-    .mini-metric-label{ font-size:12px; color:#718096; margin-bottom:4px; }
-    .mini-metric-value{ font-size:18px; font-weight:600; color:#2d3748; }
-    .growth-indicator{ display:inline-block; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:600; margin-left:8px; }
-    .growth-positive{ background:#c6f6d5; color:#22543d; } .growth-negative{ background:#fed7d7; color:#742a2a; } .growth-exceptional{ background:#fef5e7; color:#7c4e07; }
-
-    .executive-summary{ background: linear-gradient(135deg,#f6f8fb 0%,#e9ecef 100%); border-radius:12px; padding:30px; margin:30px 0; }
-    .summary-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:20px; margin-top:20px; }
-    .summary-item{ text-align:center; padding:15px; background:#fff; border-radius:8px; }
-    .summary-label{ font-size:14px; color:#718096; margin-bottom:8px; }
-    .summary-value{ font-size:24px; font-weight:700; color:#2d3748; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic SaaS Business Review</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .presentation-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .slides-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .slide {
+            padding: 40px 60px;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* NAVIGATION STYLES - HIGHLY VISIBLE */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 60px;
+            background: #2d3748;
+            border-radius: 0 0 20px 20px;
+            width: 100%;
+            position: relative;
+            z-index: 1000;
+        }
+        
+        .nav-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        
+        .nav-button:hover:not(:disabled) {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .slide-counter {
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            background: #667eea;
+            padding: 10px 25px;
+            border-radius: 10px;
+        }
+        
+        .slide-header {
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            color: #1a202c;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: #2d3748;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+        
+        h3 {
+            color: #4a5568;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .subtitle {
+            color: #718096;
+            font-size: 18px;
+            font-weight: 400;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        
+        .metric-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .metric-change {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .positive {
+            color: #48bb78;
+        }
+        
+        .negative {
+            color: #fc8181;
+        }
+        
+        .neutral {
+            color: #718096;
+        }
+        
+        .chart-container {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+        
+        .data-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .data-table tr:hover {
+            background: #f7fafc;
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .highlight-row {
+            background: #fef5e7 !important;
+            font-weight: 600;
+        }
+        
+        .key-insights {
+            background: #edf2f7;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        
+        .key-insights ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .key-insights li {
+            padding: 8px 0;
+            color: #2d3748;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .key-insights li:before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+        }
+        
+        .segment-performance {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .segment-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .segment-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        
+        .segment-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+        
+        .segment-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .mini-metric {
+            padding: 10px;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+        
+        .mini-metric-label {
+            font-size: 12px;
+            color: #718096;
+            margin-bottom: 4px;
+        }
+        
+        .mini-metric-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .growth-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .growth-positive {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .growth-negative {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .growth-exceptional {
+            background: #fef5e7;
+            color: #7c4e07;
+        }
+        
+        .executive-summary {
+            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .summary-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .summary-label {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 8px;
+        }
+        
+        .summary-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+    </style>
 </head>
 <body>
-  <div class="presentation-container">
-    <div class="slides-wrapper" aria-live="polite">
-      <!-- Slide 1 -->
-      <div class="slide active" aria-hidden="false">
-        <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:600px;">
-          <h1 style="font-size:56px; text-align:center; margin-bottom:40px; color:#1a202c;">SaaS Performance & Growth Analysis</h1>
-          <p class="subtitle" style="font-size:32px; text-align:center; color:#4a5568; font-weight:500;">YTD August 2025</p>
-        </div>
-      </div>
-
-      <!-- Slide 2 -->
-      <div class="slide" aria-hidden="true">
-        <div class="slide-header">
-          <h2>Executive Summary</h2>
-          <p class="subtitle">Key Performance Highlights</p>
-        </div>
-        <div class="executive-summary">
-          <h3>Business Momentum</h3>
-          <p style="font-size:14px; color:#718096; margin-bottom:15px; font-style:italic;">*All comparisons vs December 2024 baseline</p>
-          <div class="summary-grid">
-            <div class="summary-item">
-              <div class="summary-label">Total MRR</div>
-              <div class="summary-value">€1.20M</div>
-              <span class="growth-indicator growth-positive">+12.1%</span>
+    <div class="presentation-container">
+        <div class="slides-wrapper">
+            <!-- Slide 1: Title Slide -->
+            <div class="slide active">
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 600px;">
+                    <h1 style="font-size: 56px; text-align: center; margin-bottom: 40px; color: #1a202c;">SaaS Performance & Growth Analysis</h1>
+                    <p class="subtitle" style="font-size: 32px; text-align: center; color: #4a5568; font-weight: 500;">YTD August 2025</p>
+                </div>
             </div>
-            <div class="summary-item">
-              <div class="summary-label">Total ARR</div>
-              <div class="summary-value">€14.4M</div>
-              <span class="growth-indicator growth-positive">+12.1%</span>
+
+            <!-- Slide 2: Executive Summary -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Executive Summary</h2>
+                    <p class="subtitle">Key Performance Highlights</p>
+                </div>
+                
+                <div class="executive-summary">
+                    <h3>Business Momentum</h3>
+                    <p style="font-size: 14px; color: #718096; margin-bottom: 15px; font-style: italic;">*All comparisons vs December 2024 baseline</p>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="summary-label">Total MRR</div>
+                            <div class="summary-value">€1.20M</div>
+                            <span class="growth-indicator growth-positive">+12.1%</span>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Total ARR</div>
+                            <div class="summary-value">€14.4M</div>
+                            <span class="growth-indicator growth-positive">+12.1%</span>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Customer Base</div>
+                            <div class="summary-value">6,186</div>
+                            <span class="growth-indicator growth-positive">+9.2%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="key-insights">
+                    <h3>Strategic Highlights YTD</h3>
+                    <ul>
+                        <li><strong>Overall Performance:</strong> 12% growth since Dec-24 driven by mix of E-Commerce expansion, flat Amazon performance, and Stripe segment launch</li>
+                        <li><strong>E-Commerce Dynamics:</strong> 17% MRR growth with 37% customer expansion, offset by ARPU compression and cash conversion challenges YTD</li>
+                        <li><strong>Amazon Stabilization:</strong> Flat YoY performance following significant customer attrition post-VISA transition (CN segment declined from 1.8k to 1k customers), offset by Avalara acquisition with strong cash conversion</li>
+                        <li><strong>Enterprise Growth:</strong> Stable performance with new contracted wins contributing ~€0.4M ARR (in addition to the above figure) yet to be billed</li>
+                        <li><strong>Geographic Expansion:</strong> Momentum building in US market. EU also showing growth in year - detailed analysis on slide 7</li>
+                    </ul>
+                </div>
             </div>
-            <div class="summary-item">
-              <div class="summary-label">Customer Base</div>
-              <div class="summary-value">6,186</div>
-              <span class="growth-indicator growth-positive">+9.2%</span>
+
+            <!-- Slide 3: Segment Performance Analysis -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Segment Performance Analysis</h2>
+                    <p class="subtitle">MRR and Customer Dynamics by Business Unit</p>
+                </div>
+                
+                <div class="segment-performance">
+                    <div class="segment-card">
+                        <div class="segment-title">Amazon</div>
+                        <div class="segment-metrics">
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">MRR</div>
+                                <div class="mini-metric-value">€448k
+                                    <span class="growth-indicator growth-positive">+3.8%</span>
+                                </div>
+                            </div>
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">ARR</div>
+                                <div class="mini-metric-value">€5.4M</div>
+                            </div>
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">Customers</div>
+                                <div class="mini-metric-value">4,255
+                                    <span class="growth-indicator growth-negative">-1.9%</span>
+                                </div>
+                            </div>
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">ARPU p.a.</div>
+                                <div class="mini-metric-value">€1,263
+                                    <span class="growth-indicator growth-positive">+5.8%</span>
+                                </div>
+                            </div>
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">NRR YTD</div>
+                                <div class="mini-metric-value">98.9%</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="segment-card">
+                        <div class="segment-title">E-Commerce</div>
+                        <div class="segment-metrics">
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">MRR</div>
+                                <div class="mini-metric-value">€381k
+                                    <span class="growth-indicator growth-positive">+16.7%</span>
+                                </div>
+                            </div>
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">ARR</div>
+                                <div class="mini-metric-value">€4.6M</div>
+                            </div>
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">Customers</div>
+                                <div class="mini-metric-value">1,689
+                                    <span class="growth-indicator growth-positive">+37.9%</span>
+                                </div>
+                            </div>
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">ARPU p.a.</div>
+                                <div class="mini-metric-value">€2,710
+                                    <span class="growth-indicator growth-negative">-15.4%</span>
+                                </div>
+                            </div>
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">NRR YTD</div>
+                                <div class="mini-metric-value">98.4%</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="segment-card">
+                        <div class="segment-title">Enterprise</div>
+                        <div class="segment-metrics">
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">MRR</div>
+                                <div class="mini-metric-value">€312k
+                                    <span class="growth-indicator growth-positive">+6.2%</span>
+                                </div>
+                            </div>
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">ARR</div>
+                                <div class="mini-metric-value">€3.7M</div>
+                            </div>
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">Customers</div>
+                                <div class="mini-metric-value">64
+                                    <span class="growth-indicator growth-positive">+7%</span>
+                                </div>
+                            </div>
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">ARPU p.a.</div>
+                                <div class="mini-metric-value">€58,575
+                                    <span class="growth-indicator growth-positive">+7.8%</span>
+                                </div>
+                            </div>
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">NRR YTD</div>
+                                <div class="mini-metric-value">100.0%</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="segment-card">
+                        <div class="segment-title">Stripe</div>
+                        <div class="segment-metrics">
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">MRR</div>
+                                <div class="mini-metric-value">€59k
+                                    <span class="growth-indicator growth-exceptional">+227.6%</span>
+                                </div>
+                            </div>
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">ARR</div>
+                                <div class="mini-metric-value">€0.7M</div>
+                            </div>
+                            <div class="mini-metric">
+                                <div class="mini-metric-label">Customers</div>
+                                <div class="mini-metric-value">178
+                                    <span class="growth-indicator growth-exceptional">+356.4%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="key-insights">
-          <h3>Strategic Highlights YTD</h3>
-          <ul>
-            <li><strong>Overall Performance:</strong> 12% growth since Dec-24 driven by mix of E-Commerce expansion, flat Amazon performance, and Stripe segment launch</li>
-            <li><strong>E-Commerce Dynamics:</strong> 17% MRR growth with 37% customer expansion, offset by ARPU compression and cash conversion challenges YTD</li>
-            <li><strong>Amazon Stabilization:</strong> Flat YoY performance following significant customer attrition post-VISA transition (CN segment declined from 1.8k to 1k customers), offset by Avalara acquisition with strong cash conversion</li>
-            <li><strong>Enterprise Growth:</strong> Stable performance with new contracted wins contributing ~€0.4M ARR (in addition to the above figure) yet to be billed</li>
-            <li><strong>Geographic Expansion:</strong> Momentum building in US market. EU also showing growth in year - detailed analysis on slide 7</li>
-          </ul>
-        </div>
-      </div>
 
-      <!-- Slide 3 -->
-      <div class="slide" aria-hidden="true">
-        <div class="slide-header">
-          <h2>Segment Performance Analysis</h2>
-          <p class="subtitle">MRR and Customer Dynamics by Business Unit</p>
-        </div>
-
-        <div class="segment-performance">
-          <div class="segment-card">
-            <div class="segment-title">Amazon</div>
-            <div class="segment-metrics">
-              <div class="mini-metric">
-                <div class="mini-metric-label">MRR</div>
-                <div class="mini-metric-value">€448k
-                  <span class="growth-indicator growth-positive">+3.8%</span>
+            <!-- Slide 4: Amazon Cohort Analysis -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Amazon Segment Performance</h2>
+                    <p class="subtitle">Monthly Cohort Analysis & Trends</p>
                 </div>
-              </div>
-              <div class="mini-metric">
-                <div class="mini-metric-label">ARR</div>
-                <div class="mini-metric-value">€5.4M</div>
-              </div>
-              <div class="mini-metric">
-                <div class="mini-metric-label">Customers</div>
-                <div class="mini-metric-value">4,255
-                  <span class="growth-indicator growth-negative">-1.9%</span>
+                
+                <div style="display: grid; grid-template-columns: 60% 40%; gap: 20px;">
+                    <!-- Left side: Compact monthly data -->
+                    <div style="background: #f7fafc; border-radius: 12px; padding: 15px;">
+                        <table style="width: 100%; font-size: 11px; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                    <th style="padding: 6px; text-align: left;">Month</th>
+                                    <th style="padding: 6px; text-align: right;">MRR</th>
+                                    <th style="padding: 6px; text-align: right;">Growth</th>
+                                    <th style="padding: 6px; text-align: right;">NRR</th>
+                                    <th style="padding: 6px; text-align: right;">Churn</th>
+                                    <th style="padding: 6px; text-align: right;">New</th>
+                                    <th style="padding: 6px; text-align: right;">Churned</th>
+                                    <th style="padding: 6px; text-align: right;">Customers</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Dec-24</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€428k</td>
+                                    <td style="padding: 5px; text-align: right;">-</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">96.8%</td>
+                                    <td style="padding: 5px; text-align: right;">3.6%</td>
+                                    <td style="padding: 5px; text-align: right;">131</td>
+                                    <td style="padding: 5px; text-align: right;">154</td>
+                                    <td style="padding: 5px; text-align: right;">4,338</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Jan-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€426k</td>
+                                    <td style="padding: 5px; text-align: right; color: #e53e3e;">-0.4%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">97.0%</td>
+                                    <td style="padding: 5px; text-align: right;">4.0%</td>
+                                    <td style="padding: 5px; text-align: right;">145</td>
+                                    <td style="padding: 5px; text-align: right;">171</td>
+                                    <td style="padding: 5px; text-align: right;">4,312</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Feb-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€423k</td>
+                                    <td style="padding: 5px; text-align: right; color: #e53e3e;">-0.7%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">97.8%</td>
+                                    <td style="padding: 5px; text-align: right;">4.3%</td>
+                                    <td style="padding: 5px; text-align: right;">84</td>
+                                    <td style="padding: 5px; text-align: right;">182</td>
+                                    <td style="padding: 5px; text-align: right;">4,214</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Mar-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€425k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+0.5%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">98.4%</td>
+                                    <td style="padding: 5px; text-align: right;">1.9%</td>
+                                    <td style="padding: 5px; text-align: right;">136</td>
+                                    <td style="padding: 5px; text-align: right;">80</td>
+                                    <td style="padding: 5px; text-align: right;">4,273</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Apr-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€430k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+1.0%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">99.8%</td>
+                                    <td style="padding: 5px; text-align: right;">2.0%</td>
+                                    <td style="padding: 5px; text-align: right;">65</td>
+                                    <td style="padding: 5px; text-align: right;">84</td>
+                                    <td style="padding: 5px; text-align: right;">4,258</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">May-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€427k</td>
+                                    <td style="padding: 5px; text-align: right; color: #e53e3e;">-0.7%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">98.5%</td>
+                                    <td style="padding: 5px; text-align: right;">2.1%</td>
+                                    <td style="padding: 5px; text-align: right;">48</td>
+                                    <td style="padding: 5px; text-align: right;">87</td>
+                                    <td style="padding: 5px; text-align: right;">4,227</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Jun-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€432k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+1.3%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600; color: #38a169;">100.2%</td>
+                                    <td style="padding: 5px; text-align: right;">1.2%</td>
+                                    <td style="padding: 5px; text-align: right;">72</td>
+                                    <td style="padding: 5px; text-align: right;">52</td>
+                                    <td style="padding: 5px; text-align: right;">4,251</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Jul-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€438k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+1.3%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600; color: #38a169;">100.3%</td>
+                                    <td style="padding: 5px; text-align: right;">2.0%</td>
+                                    <td style="padding: 5px; text-align: right;">74</td>
+                                    <td style="padding: 5px; text-align: right;">85</td>
+                                    <td style="padding: 5px; text-align: right;">4,244</td>
+                                </tr>
+                                <tr style="background: #fef5e7;">
+                                    <td style="padding: 5px; font-weight: 600;">Aug-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€448k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169; font-weight: 600;">+2.3%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600; color: #38a169;">101.3%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">1.6%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">72</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">69</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">4,255</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Right side: Visual trends and insights -->
+                    <div>
+                        <!-- MRR Trend Chart -->
+                        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                            <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #4a5568;">MRR Growth Trajectory</h4>
+                            <div style="display: flex; align-items: flex-end; height: 60px; justify-content: space-between;">
+                                <div style="width: 10%; background: #cbd5e0; height: 95%; position: relative;">
+                                    <span style="position: absolute; bottom: -18px; font-size: 9px; left: -3px;">Dec</span>
+                                    <span style="position: absolute; top: -18px; font-size: 10px; font-weight: 600;">€428k</span>
+                                </div>
+                                <div style="width: 10%; background: #cbd5e0; height: 94%;"></div>
+                                <div style="width: 10%; background: #feb2b2; height: 92%;"></div>
+                                <div style="width: 10%; background: #cbd5e0; height: 93%;"></div>
+                                <div style="width: 10%; background: #9ae6b4; height: 96%;"></div>
+                                <div style="width: 10%; background: #cbd5e0; height: 94%;"></div>
+                                <div style="width: 10%; background: #9ae6b4; height: 97%;"></div>
+                                <div style="width: 10%; background: #9ae6b4; height: 98%;"></div>
+                                <div style="width: 10%; background: #68d391; height: 100%; position: relative;">
+                                    <span style="position: absolute; bottom: -18px; font-size: 9px; right: -3px;">Aug</span>
+                                    <span style="position: absolute; top: -18px; font-size: 10px; font-weight: 600;">€448k</span>
+                                </div>
+                            </div>
+                            <p style="margin: 20px 0 5px 0; font-size: 11px; color: #718096;">Overall: +4.6% growth YTD</p>
+                        </div>
+                        
+                        <!-- NRR Trend -->
+                        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                            <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #4a5568;">NRR Improvement Path</h4>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 18px; font-weight: 700; color: #e53e3e;">96.8%</div>
+                                    <div style="font-size: 9px; color: #718096;">Dec-24</div>
+                                </div>
+                                <div style="flex: 1; margin: 0 8px;">
+                                    <div style="height: 3px; background: linear-gradient(to right, #feb2b2, #fef3c7, #9ae6b4); border-radius: 2px;"></div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 18px; font-weight: 700; color: #38a169;">101.3%</div>
+                                    <div style="font-size: 9px; color: #718096;">Aug-25</div>
+                                </div>
+                            </div>
+                            <p style="margin: 8px 0 0 0; font-size: 10px; color: #718096; text-align: center;">Crossed 100% threshold in June</p>
+                        </div>
+                        
+                        <!-- Key Metrics Summary -->
+                        <div style="background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%); border-radius: 8px; padding: 12px;">
+                            <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #4a5568;">Performance Summary</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <div>
+                                    <div style="font-size: 10px; color: #718096;">Logo Churn</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #2d3748;">3.6% → 1.6%</div>
+                                    <div style="font-size: 9px; color: #38a169;">-55% improvement</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 10px; color: #718096;">ARPU</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #2d3748;">€99 → €105</div>
+                                    <div style="font-size: 9px; color: #38a169;">+6.1% growth</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 10px; color: #718096;">Customers</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #2d3748;">4,338 → 4,255</div>
+                                    <div style="font-size: 9px; color: #e53e3e;">-1.9% decline</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 10px; color: #718096;">Health Score</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #38a169;">Improving</div>
+                                    <div style="font-size: 9px; color: #718096;">NRR > 100%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="mini-metric">
-                <div class="mini-metric-label">ARPU p.a.</div>
-                <div class="mini-metric-value">€1,263
-                  <span class="growth-indicator growth-positive">+5.8%</span>
+                
+                <!-- Strategic Notes Section -->
+                <div style="margin-top: 20px; display: grid; grid-template-columns: 60% 40%; gap: 20px;">
+                    <div class="key-insights">
+                        <h3 style="font-size: 16px; margin-bottom: 12px;">Strategic Context</h3>
+                        <ul style="font-size: 13px; line-height: 1.6;">
+                            <li><strong>VISA Transition Impact:</strong> July '24 customer base of ~5k reduced significantly when transitioned off VISA, primarily affecting CN market (1.8k → 1k). Dec '24 - Feb '25 was volatile due to transition, settled since April</li>
+                            <li><strong>Avalara Acquisition:</strong> Successfully acquired and integrated new cohort, achieving strong cash conversion with 90%+ on immediate monthly card recurring payments</li>
+                            <li><strong>Revenue Dynamics:</strong> Strong upsell performance offset by continued churn pressure, maintaining overall growth trajectory</li>
+                            <li><strong>Churn Analysis:</strong> 50% of churn due to business cessation, 10% fee-related (mainly CN), 10% support issues</li>
+                        </ul>
+                    </div>
+                    <div class="key-insights" style="background: #fef5e7; border-left-color: #f6ad55;">
+                        <h3 style="font-size: 16px; margin-bottom: 12px;">Action Items</h3>
+                        <ul style="font-size: 13px; line-height: 1.6;">
+                            <li><strong>CN Pricing Review:</strong> New pricing implemented, performance to be reviewed</li>
+                            <li><strong>Dev Support:</strong> Manage Stripe subscription, up-sell capabilities and various other items</li>
+                            <li><strong>Retention Focus:</strong> Dedicated team resources on retention and renewal programs</li>
+                            <li><strong>Support Enhancement:</strong> Address 10% support-related churn through service improvements</li>
+                        </ul>
+                    </div>
                 </div>
-              </div>
-              <div class="mini-metric">
-                <div class="mini-metric-label">NRR YTD</div>
-                <div class="mini-metric-value">98.9%</div>
-              </div>
             </div>
-          </div>
 
-          <div class="segment-card">
-            <div class="segment-title">E-Commerce</div>
-            <div class="segment-metrics">
-              <div class="mini-metric">
-                <div class="mini-metric-label">MRR</div>
-                <div class="mini-metric-value">€381k
-                  <span class="growth-indicator growth-positive">+16.7%</span>
+            <!-- Slide 5: E-Commerce Cohort Analysis -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>E-Commerce Segment Performance</h2>
+                    <p class="subtitle">Monthly Cohort Analysis & Trends</p>
                 </div>
-              </div>
-              <div class="mini-metric">
-                <div class="mini-metric-label">ARR</div>
-                <div class="mini-metric-value">€4.6M</div>
-              </div>
-              <div class="mini-metric">
-                <div class="mini-metric-label">Customers</div>
-                <div class="mini-metric-value">1,689
-                  <span class="growth-indicator growth-positive">+37.9%</span>
+                
+                <div style="display: grid; grid-template-columns: 60% 40%; gap: 20px;">
+                    <!-- Left side: Compact monthly data -->
+                    <div style="background: #f7fafc; border-radius: 12px; padding: 15px;">
+                        <table style="width: 100%; font-size: 11px; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                    <th style="padding: 6px; text-align: left;">Month</th>
+                                    <th style="padding: 6px; text-align: right;">MRR</th>
+                                    <th style="padding: 6px; text-align: right;">Growth</th>
+                                    <th style="padding: 6px; text-align: right;">NRR</th>
+                                    <th style="padding: 6px; text-align: right;">Churn</th>
+                                    <th style="padding: 6px; text-align: right;">New</th>
+                                    <th style="padding: 6px; text-align: right;">Churned</th>
+                                    <th style="padding: 6px; text-align: right;">Customers</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Dec-24</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€321k</td>
+                                    <td style="padding: 5px; text-align: right;">-</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">95.4%</td>
+                                    <td style="padding: 5px; text-align: right;">1.2%</td>
+                                    <td style="padding: 5px; text-align: right;">70</td>
+                                    <td style="padding: 5px; text-align: right;">15</td>
+                                    <td style="padding: 5px; text-align: right;">1,267</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Jan-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€326k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+1.5%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">96.0%</td>
+                                    <td style="padding: 5px; text-align: right;">4.4%</td>
+                                    <td style="padding: 5px; text-align: right;">104</td>
+                                    <td style="padding: 5px; text-align: right;">58</td>
+                                    <td style="padding: 5px; text-align: right;">1,313</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Feb-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€328k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+0.6%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">97.8%</td>
+                                    <td style="padding: 5px; text-align: right;">4.0%</td>
+                                    <td style="padding: 5px; text-align: right;">76</td>
+                                    <td style="padding: 5px; text-align: right;">53</td>
+                                    <td style="padding: 5px; text-align: right;">1,336</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Mar-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€337k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+2.6%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">99.4%</td>
+                                    <td style="padding: 5px; text-align: right;">1.4%</td>
+                                    <td style="padding: 5px; text-align: right;">95</td>
+                                    <td style="padding: 5px; text-align: right;">20</td>
+                                    <td style="padding: 5px; text-align: right;">1,411</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Apr-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€347k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+3.1%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">99.6%</td>
+                                    <td style="padding: 5px; text-align: right;">2.1%</td>
+                                    <td style="padding: 5px; text-align: right;">88</td>
+                                    <td style="padding: 5px; text-align: right;">31</td>
+                                    <td style="padding: 5px; text-align: right;">1,470</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">May-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€352k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+1.4%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">98.4%</td>
+                                    <td style="padding: 5px; text-align: right;">2.3%</td>
+                                    <td style="padding: 5px; text-align: right;">81</td>
+                                    <td style="padding: 5px; text-align: right;">35</td>
+                                    <td style="padding: 5px; text-align: right;">1,519</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Jun-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€360k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+2.1%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">99.4%</td>
+                                    <td style="padding: 5px; text-align: right;">2.1%</td>
+                                    <td style="padding: 5px; text-align: right;">82</td>
+                                    <td style="padding: 5px; text-align: right;">33</td>
+                                    <td style="padding: 5px; text-align: right;">1,569</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Jul-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€370k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+2.9%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">98.7%</td>
+                                    <td style="padding: 5px; text-align: right;">2.0%</td>
+                                    <td style="padding: 5px; text-align: right;">111</td>
+                                    <td style="padding: 5px; text-align: right;">33</td>
+                                    <td style="padding: 5px; text-align: right;">1,650</td>
+                                </tr>
+                                <tr style="background: #fef5e7;">
+                                    <td style="padding: 5px; font-weight: 600;">Aug-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€381k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169; font-weight: 600;">+3.1%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600; color: #38a169;">100.8%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">2.1%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">72</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">36</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">1,689</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Right side: Visual trends and insights -->
+                    <div>
+                        <!-- MRR Trend Chart -->
+                        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                            <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #4a5568;">MRR Growth Trajectory</h4>
+                            <div style="display: flex; align-items: flex-end; height: 60px; justify-content: space-between;">
+                                <div style="width: 10%; background: #cbd5e0; height: 84%; position: relative;">
+                                    <span style="position: absolute; bottom: -18px; font-size: 9px; left: -3px;">Dec</span>
+                                    <span style="position: absolute; top: -18px; font-size: 10px; font-weight: 600;">€321k</span>
+                                </div>
+                                <div style="width: 10%; background: #9ae6b4; height: 86%;"></div>
+                                <div style="width: 10%; background: #9ae6b4; height: 86%;"></div>
+                                <div style="width: 10%; background: #9ae6b4; height: 88%;"></div>
+                                <div style="width: 10%; background: #9ae6b4; height: 91%;"></div>
+                                <div style="width: 10%; background: #9ae6b4; height: 92%;"></div>
+                                <div style="width: 10%; background: #9ae6b4; height: 94%;"></div>
+                                <div style="width: 10%; background: #9ae6b4; height: 97%;"></div>
+                                <div style="width: 10%; background: #68d391; height: 100%; position: relative;">
+                                    <span style="position: absolute; bottom: -18px; font-size: 9px; right: -3px;">Aug</span>
+                                    <span style="position: absolute; top: -18px; font-size: 10px; font-weight: 600;">€381k</span>
+                                </div>
+                            </div>
+                            <p style="margin: 20px 0 5px 0; font-size: 11px; color: #718096;">Overall: +18.7% growth YTD</p>
+                        </div>
+                        
+                        <!-- NRR Trend -->
+                        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                            <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #4a5568;">NRR Improvement Path</h4>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 18px; font-weight: 700; color: #e53e3e;">95.4%</div>
+                                    <div style="font-size: 9px; color: #718096;">Dec-24</div>
+                                </div>
+                                <div style="flex: 1; margin: 0 8px;">
+                                    <div style="height: 3px; background: linear-gradient(to right, #feb2b2, #fef3c7, #9ae6b4); border-radius: 2px;"></div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 18px; font-weight: 700; color: #38a169;">100.8%</div>
+                                    <div style="font-size: 9px; color: #718096;">Aug-25</div>
+                                </div>
+                            </div>
+                            <p style="margin: 8px 0 0 0; font-size: 10px; color: #718096; text-align: center;">Crossed 100% threshold in August</p>
+                        </div>
+                        
+                        <!-- Key Metrics Summary -->
+                        <div style="background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%); border-radius: 8px; padding: 12px;">
+                            <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #4a5568;">Performance Summary</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <div>
+                                    <div style="font-size: 10px; color: #718096;">Logo Churn</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #2d3748;">1.2% → 2.1%</div>
+                                    <div style="font-size: 9px; color: #e53e3e;">+75% increase</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 10px; color: #718096;">ARPU</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #2d3748;">€253 → €226</div>
+                                    <div style="font-size: 9px; color: #e53e3e;">-10.7% decline</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 10px; color: #718096;">Customers</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #2d3748;">1,267 → 1,689</div>
+                                    <div style="font-size: 9px; color: #38a169;">+33.3% growth</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 10px; color: #718096;">Health Score</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #38a169;">Improving</div>
+                                    <div style="font-size: 9px; color: #718096;">NRR > 100%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="mini-metric">
-                <div class="mini-metric-label">ARPU p.a.</div>
-                <div class="mini-metric-value">€2,710
-                  <span class="growth-indicator growth-negative">-15.4%</span>
+                
+                <!-- Strategic Notes Section -->
+                <div style="margin-top: 20px; display: grid; grid-template-columns: 60% 40%; gap: 20px;">
+                    <div class="key-insights">
+                        <h3 style="font-size: 16px; margin-bottom: 12px;">Strategic Context</h3>
+                        <ul style="font-size: 13px; line-height: 1.6;">
+                            <li><strong>Rapid Expansion:</strong> 33.3% customer growth demonstrates strong product-market fit and execution/li>
+                            <li><strong>ARPU Compression:</strong> Shift to smaller customers driving 10.7% ARPU decline, pricing strategy refinement</li>
+                            <li><strong>NRR Milestone:</strong> Achieved 100%+ NRR in August, indicating strong upsell. Cash conversion on upsell promo continues to prove challenging.</li>
+                        </ul>
+                    </div>
+                    <div class="key-insights" style="background: #fef5e7; border-left-color: #f6ad55;">
+                        <h3 style="font-size: 16px; margin-bottom: 12px;">Action Items</h3>
+                        <ul style="font-size: 13px; line-height: 1.6;">
+                            <li><strong>Pricing Optimization:</strong> Implement tiered pricing to better capture value across customer segments</li>
+                            <li><strong>Onboarding Enhancement:</strong> Reduce early churn through improved activation flows</li>
+                            <li><strong>Retention Team:</strong> Dedicated team resources on retention and renewal programs</li>
+                            <li><strong>Segment Focus:</strong> Team growth and Identify and target higher-value customer profiles</li>
+                        </ul>
+                    </div>
                 </div>
-              </div>
-              <div class="mini-metric">
-                <div class="mini-metric-label">NRR YTD</div>
-                <div class="mini-metric-value">98.4%</div>
-              </div>
             </div>
-          </div>
 
-          <div class="segment-card">
-            <div class="segment-title">Enterprise</div>
-            <div class="segment-metrics">
-              <div class="mini-metric">
-                <div class="mini-metric-label">MRR</div>
-                <div class="mini-metric-value">€312k
-                  <span class="growth-indicator growth-positive">+6.2%</span>
+            <!-- Slide 6: Enterprise Cohort Analysis -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Enterprise Segment Performance</h2>
+                    <p class="subtitle">Monthly Cohort Analysis & Trends</p>
                 </div>
-              </div>
-              <div class="mini-metric">
-                <div class="mini-metric-label">ARR</div>
-                <div class="mini-metric-value">€3.7M</div>
-              </div>
-              <div class="mini-metric">
-                <div class="mini-metric-label">Customers</div>
-                <div class="mini-metric-value">64
-                  <span class="growth-indicator growth-positive">+7%</span>
+                
+                <div style="display: grid; grid-template-columns: 60% 40%; gap: 20px;">
+                    <!-- Left side: Compact monthly data -->
+                    <div style="background: #f7fafc; border-radius: 12px; padding: 15px;">
+                        <table style="width: 100%; font-size: 11px; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                    <th style="padding: 6px; text-align: left;">Month</th>
+                                    <th style="padding: 6px; text-align: right;">MRR</th>
+                                    <th style="padding: 6px; text-align: right;">Growth</th>
+                                    <th style="padding: 6px; text-align: right;">NRR</th>
+                                    <th style="padding: 6px; text-align: right;">Churn</th>
+                                    <th style="padding: 6px; text-align: right;">New</th>
+                                    <th style="padding: 6px; text-align: right;">Churned</th>
+                                    <th style="padding: 6px; text-align: right;">Customers</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Dec-24</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€294k</td>
+                                    <td style="padding: 5px; text-align: right;">-</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">102.4%</td>
+                                    <td style="padding: 5px; text-align: right;">2.0%</td>
+                                    <td style="padding: 5px; text-align: right;">0</td>
+                                    <td style="padding: 5px; text-align: right;">0</td>
+                                    <td style="padding: 5px; text-align: right;">60</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Jan-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€301k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+2.4%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">100.1%</td>
+                                    <td style="padding: 5px; text-align: right;">1.5%</td>
+                                    <td style="padding: 5px; text-align: right;">1</td>
+                                    <td style="padding: 5px; text-align: right;">1</td>
+                                    <td style="padding: 5px; text-align: right;">61</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Feb-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€301k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+0.1%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">99.9%</td>
+                                    <td style="padding: 5px; text-align: right;">3.1%</td>
+                                    <td style="padding: 5px; text-align: right;">1</td>
+                                    <td style="padding: 5px; text-align: right;">1</td>
+                                    <td style="padding: 5px; text-align: right;">62</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Mar-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€301k</td>
+                                    <td style="padding: 5px; text-align: right; color: #718096;">0.0%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">99.8%</td>
+                                    <td style="padding: 5px; text-align: right;">3.1%</td>
+                                    <td style="padding: 5px; text-align: right;">1</td>
+                                    <td style="padding: 5px; text-align: right;">0</td>
+                                    <td style="padding: 5px; text-align: right;">62</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Apr-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€308k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+2.1%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">99.3%</td>
+                                    <td style="padding: 5px; text-align: right;">3.1%</td>
+                                    <td style="padding: 5px; text-align: right;">1</td>
+                                    <td style="padding: 5px; text-align: right;">0</td>
+                                    <td style="padding: 5px; text-align: right;">62</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">May-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€307k</td>
+                                    <td style="padding: 5px; text-align: right; color: #e53e3e;">-0.3%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">99.7%</td>
+                                    <td style="padding: 5px; text-align: right;">3.1%</td>
+                                    <td style="padding: 5px; text-align: right;">0</td>
+                                    <td style="padding: 5px; text-align: right;">0</td>
+                                    <td style="padding: 5px; text-align: right;">62</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Jun-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€306k</td>
+                                    <td style="padding: 5px; text-align: right; color: #e53e3e;">-0.2%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">99.8%</td>
+                                    <td style="padding: 5px; text-align: right;">3.1%</td>
+                                    <td style="padding: 5px; text-align: right;">0</td>
+                                    <td style="padding: 5px; text-align: right;">0</td>
+                                    <td style="padding: 5px; text-align: right;">62</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 5px;">Jul-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€311k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169;">+1.4%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600; color: #38a169;">100.0%</td>
+                                    <td style="padding: 5px; text-align: right;">3.1%</td>
+                                    <td style="padding: 5px; text-align: right;">1</td>
+                                    <td style="padding: 5px; text-align: right;">0</td>
+                                    <td style="padding: 5px; text-align: right;">63</td>
+                                </tr>
+                                <tr style="background: #fef5e7;">
+                                    <td style="padding: 5px; font-weight: 600;">Aug-25</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">€312k</td>
+                                    <td style="padding: 5px; text-align: right; color: #38a169; font-weight: 600;">+0.6%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600; color: #38a169;">100.0%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">3.1%</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">1</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">0</td>
+                                    <td style="padding: 5px; text-align: right; font-weight: 600;">64</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Right side: Visual trends and insights -->
+                    <div>
+                        <!-- MRR Trend Chart -->
+                        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                            <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #4a5568;">MRR Growth Trajectory</h4>
+                            <div style="display: flex; align-items: flex-end; height: 60px; justify-content: space-between;">
+                                <div style="width: 10%; background: #cbd5e0; height: 94%; position: relative;">
+                                    <span style="position: absolute; bottom: -18px; font-size: 9px; left: -3px;">Dec</span>
+                                    <span style="position: absolute; top: -18px; font-size: 10px; font-weight: 600;">€294k</span>
+                                </div>
+                                <div style="width: 10%; background: #9ae6b4; height: 97%;"></div>
+                                <div style="width: 10%; background: #9ae6b4; height: 97%;"></div>
+                                <div style="width: 10%; background: #cbd5e0; height: 97%;"></div>
+                                <div style="width: 10%; background: #9ae6b4; height: 99%;"></div>
+                                <div style="width: 10%; background: #cbd5e0; height: 98%;"></div>
+                                <div style="width: 10%; background: #cbd5e0; height: 98%;"></div>
+                                <div style="width: 10%; background: #9ae6b4; height: 99%;"></div>
+                                <div style="width: 10%; background: #9ae6b4; height: 100%; position: relative;">
+                                    <span style="position: absolute; bottom: -18px; font-size: 9px; right: -3px;">Aug</span>
+                                    <span style="position: absolute; top: -18px; font-size: 10px; font-weight: 600;">€312k</span>
+                                </div>
+                            </div>
+                            <p style="margin: 20px 0 5px 0; font-size: 11px; color: #718096;">Overall: +6.1% growth YTD</p>
+                        </div>
+                        
+                        <!-- NRR Trend -->
+                        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                            <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #4a5568;">NRR Stability</h4>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 18px; font-weight: 700; color: #38a169;">102.4%</div>
+                                    <div style="font-size: 9px; color: #718096;">Dec-24</div>
+                                </div>
+                                <div style="flex: 1; margin: 0 8px;">
+                                    <div style="height: 3px; background: linear-gradient(to right, #9ae6b4, #cbd5e0, #9ae6b4); border-radius: 2px;"></div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 18px; font-weight: 700; color: #38a169;">100.0%</div>
+                                    <div style="font-size: 9px; color: #718096;">Aug-25</div>
+                                </div>
+                            </div>
+                            <p style="margin: 8px 0 0 0; font-size: 10px; color: #718096; text-align: center;">Maintaining healthy NRR at 100%</p>
+                        </div>
+                        
+                        <!-- Key Metrics Summary -->
+                        <div style="background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%); border-radius: 8px; padding: 12px;">
+                            <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #4a5568;">Performance Summary</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <div>
+                                    <div style="font-size: 10px; color: #718096;">Logo Churn</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #2d3748;">2.0% → 3.1%</div>
+                                    <div style="font-size: 9px; color: #e53e3e;">+55% increase</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 10px; color: #718096;">ARPU</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #2d3748;">€4.9k → €4.9k</div>
+                                    <div style="font-size: 9px; color: #718096;">Stable</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 10px; color: #718096;">Customers</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #2d3748;">60 → 64</div>
+                                    <div style="font-size: 9px; color: #38a169;">+6.7% growth</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 10px; color: #718096;">Health Score</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #38a169;">Stable</div>
+                                    <div style="font-size: 9px; color: #718096;">NRR at 100%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="mini-metric">
-                <div class="mini-metric-label">ARPU p.a.</div>
-                <div class="mini-metric-value">€58,575
-                  <span class="growth-indicator growth-positive">+7.8%</span>
+                
+                <!-- Strategic Notes Section -->
+                <div style="margin-top: 20px; display: grid; grid-template-columns: 60% 40%; gap: 20px;">
+                    <div class="key-insights">
+                        <h3 style="font-size: 16px; margin-bottom: 12px;">Strategic Context</h3>
+                        <ul style="font-size: 13px; line-height: 1.6;">
+                            <li><strong>Stable Base:</strong> Enterprise segment showing resilient performance with minimal customer churn and steady expansion revenue</li>
+                            <li><strong>New Wins Pipeline:</strong> €0.4M ARR from new contracted wins yet to be billed will drive Q4 growth acceleration</li>
+                            <li><strong>Account Concentration:</strong> Limited customer base of 64 accounts creates both opportunity and risk</li>
+                            <li><strong>Premium Positioning:</strong> Maintaining €58k+ ARPU demonstrates strong value proposition in enterprise market</li>
+                        </ul>
+                    </div>
+                    <div class="key-insights" style="background: #fef5e7; border-left-color: #f6ad55;">
+                        <h3 style="font-size: 16px; margin-bottom: 12px;">Action Items</h3>
+                        <ul style="font-size: 13px; line-height: 1.6;">
+                            <li><strong>Accelerate Billing:</strong> Convert €0.4M contracted ARR to billed revenue in Q4</li>
+                            <li><strong>Account Expansion:</strong> Deepen penetration within existing 64 accounts</li>
+                            <li><strong>Logo Acquisition:</strong> Target 10-15 new enterprise logos for Q4/Q1</li>
+                        </ul>
+                    </div>
                 </div>
-              </div>
-              <div class="mini-metric">
-                <div class="mini-metric-label">NRR YTD</div>
-                <div class="mini-metric-value">100.0%</div>
-              </div>
             </div>
-          </div>
 
-          <div class="segment-card">
-            <div class="segment-title">Stripe</div>
-            <div class="segment-metrics">
-              <div class="mini-metric">
-                <div class="mini-metric-label">MRR</div>
-                <div class="mini-metric-value">€59k
-                  <span class="growth-indicator growth-exceptional">+227.6%</span>
+            <!-- Slide 7: Geographic Performance -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Geographic Distribution & Growth</h2>
+                    <p class="subtitle">Regional MRR Performance Analysis</p>
                 </div>
-              </div>
-              <div class="mini-metric">
-                <div class="mini-metric-label">ARR</div>
-                <div class="mini-metric-value">€0.7M</div>
-              </div>
-              <div class="mini-metric">
-                <div class="mini-metric-label">Customers</div>
-                <div class="mini-metric-value">178
-                  <span class="growth-indicator growth-exceptional">+356.4%</span>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Region</th>
+                            <th>MRR Dec-24 (€k)</th>
+                            <th>MRR Aug-25 (€k)</th>
+                            <th>Growth %</th>
+                            <th>Customer Count</th>
+                            <th>% of Total MRR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>United States</td>
+                            <td>€209.7</td>
+                            <td>€256.7</td>
+                            <td class="positive">+22.4%</td>
+                            <td>841</td>
+                            <td>21.4%</td>
+                        </tr>
+                        <tr>
+                            <td>United Kingdom</td>
+                            <td>€206.2</td>
+                            <td>€217.9</td>
+                            <td class="positive">+5.7%</td>
+                            <td>1,023</td>
+                            <td>18.2%</td>
+                        </tr>
+                        <tr>
+                            <td>Other EU</td>
+                            <td>€239.9</td>
+                            <td>€276.0</td>
+                            <td class="positive">+15.1%</td>
+                            <td>1,345</td>
+                            <td>23.0%</td>
+                        </tr>
+                        <tr>
+                            <td>Rest of World</td>
+                            <td>€191.1</td>
+                            <td>€192.7</td>
+                            <td class="neutral">+0.8%</td>
+                            <td>1,089</td>
+                            <td>16.1%</td>
+                        </tr>
+                        <tr>
+                            <td>Germany</td>
+                            <td>€124.4</td>
+                            <td>€119.7</td>
+                            <td class="negative">-3.8%</td>
+                            <td>438</td>
+                            <td>10.0%</td>
+                        </tr>
+                        <tr>
+                            <td>Netherlands</td>
+                            <td>€39.9</td>
+                            <td>€58.4</td>
+                            <td class="positive">+46.3%</td>
+                            <td>248</td>
+                            <td>4.9%</td>
+                        </tr>
+                        <tr>
+                            <td>France</td>
+                            <td>€35.2</td>
+                            <td>€52.1</td>
+                            <td class="positive">+48.0%</td>
+                            <td>189</td>
+                            <td>4.3%</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>Total</strong></td>
+                            <td><strong>€1,068.8</strong></td>
+                            <td><strong>€1,200.3</strong></td>
+                            <td class="positive"><strong>+12.3%</strong></td>
+                            <td><strong>6,186</strong></td>
+                            <td><strong>100%</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Top Growth Market</div>
+                        <div class="metric-value">France</div>
+                        <div class="metric-change positive">+48.0% MRR Growth</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Largest Market</div>
+                        <div class="metric-value">Other EU</div>
+                        <div class="metric-change">23.0% of Total MRR</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Expected Growth</div>
+                        <div class="metric-value">United States</div>
+                        <div class="metric-change positive">+22.4% Growth Momentum</div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Slide 4 -->
-      <div class="slide" aria-hidden="true">
-        <div class="slide-header">
-          <h2>Amazon Segment Performance</h2>
-          <p class="subtitle">Monthly Cohort Analysis & Trends</p>
-        </div>
-        <div style="display:grid; grid-template-columns:60% 40%; gap:20px;">
-          <div style="background:#f7fafc; border-radius:12px; padding:15px;">
-            <!-- table omitted for brevity (left exactly as you provided) -->
-            <!-- BEGIN: Amazon table -->
-            <table style="width: 100%; font-size: 11px; border-collapse: collapse;">
-              <thead>
-                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                  <th style="padding: 6px; text-align: left;">Month</th>
-                  <th style="padding: 6px; text-align: right;">MRR</th>
-                  <th style="padding: 6px; text-align: right;">Growth</th>
-                  <th style="padding: 6px; text-align: right;">NRR</th>
-                  <th style="padding: 6px; text-align: right;">Churn</th>
-                  <th style="padding: 6px; text-align: right;">New</th>
-                  <th style="padding: 6px; text-align: right;">Churned</th>
-                  <th style="padding: 6px; text-align: right;">Customers</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- your rows kept exactly the same -->
-                <!-- ... (rows Dec-24 through Aug-25) ... -->
-                <tr style="background: #fef5e7;">
-                  <td style="padding: 5px; font-weight: 600;">Aug-25</td>
-                  <td style="padding: 5px; text-align: right; font-weight: 600;">€448k</td>
-                  <td style="padding: 5px; text-align: right; color: #38a169; font-weight: 600;">+2.3%</td>
-                  <td style="padding: 5px; text-align: right; font-weight: 600; color: #38a169;">101.3%</td>
-                  <td style="padding: 5px; text-align: right; font-weight: 600;">1.6%</td>
-                  <td style="padding: 5px; text-align: right; font-weight: 600;">72</td>
-                  <td style="padding: 5px; text-align: right; font-weight: 600;">69</td>
-                  <td style="padding: 5px; text-align: right; font-weight: 600;">4,255</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- END: Amazon table -->
-          </div>
-          <div>
-            <!-- right side blocks exactly as you provided -->
-            <!-- ... (MRR trend, NRR path, summary) ... -->
-          </div>
-        </div>
-        <div style="margin-top: 20px; display: grid; grid-template-columns: 60% 40%; gap: 20px;">
-          <div class="key-insights">
-            <h3 style="font-size: 16px; margin-bottom: 12px;">Strategic Context</h3>
-            <ul style="font-size: 13px; line-height: 1.6;">
-              <li><strong>VISA Transition Impact:</strong> July '24 customer base of ~5k reduced significantly when transitioned off VISA, primarily affecting CN market (1.8k → 1k). Dec '24 - Feb '25 was volatile due to transition, settled since April</li>
-              <li><strong>Avalara Acquisition:</strong> Successfully acquired and integrated new cohort, achieving strong cash conversion with 90%+ on immediate monthly card recurring payments</li>
-              <li><strong>Revenue Dynamics:</strong> Strong upsell performance offset by continued churn pressure, maintaining overall growth trajectory</li>
-              <li><strong>Churn Analysis:</strong> 50% of churn due to business cessation, 10% fee-related (mainly CN), 10% support issues</li>
-            </ul>
-          </div>
-          <div class="key-insights" style="background:#fef5e7; border-left-color:#f6ad55;">
-            <h3 style="font-size: 16px; margin-bottom: 12px;">Action Items</h3>
-            <ul style="font-size: 13px; line-height: 1.6;">
-              <li><strong>CN Pricing Review:</strong> New pricing implemented, performance to be reviewed</li>
-              <li><strong>Dev Support:</strong> Manage Stripe subscription, up-sell capabilities and various other items</li>
-              <li><strong>Retention Focus:</strong> Dedicated team resources on retention and renewal programs</li>
-              <li><strong>Support Enhancement:</strong> Address 10% support-related churn through service improvements</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 5 -->
-      <div class="slide" aria-hidden="true">
-        <div class="slide-header">
-          <h2>E-Commerce Segment Performance</h2>
-          <p class="subtitle">Monthly Cohort Analysis & Trends</p>
-        </div>
-        <div style="display:grid; grid-template-columns:60% 40%; gap:20px;">
-          <div style="background:#f7fafc; border-radius:12px; padding:15px;">
-            <!-- (table kept the same as provided) -->
-          </div>
-          <div>
-            <!-- right side (charts & summary) kept the same -->
-          </div>
-        </div>
-        <div style="margin-top:20px; display:grid; grid-template-columns:60% 40%; gap:20px;">
-          <div class="key-insights">
-            <h3 style="font-size:16px; margin-bottom:12px;">Strategic Context</h3>
-            <ul style="font-size:13px; line-height:1.6;">
-              <li><strong>Rapid Expansion:</strong> 33.3% customer growth demonstrates strong product‑market fit and execution</li>
-              <li><strong>ARPU Compression:</strong> Shift to smaller customers driving 10.7% ARPU decline, pricing strategy refinement</li>
-              <li><strong>NRR Milestone:</strong> Achieved 100%+ NRR in August, indicating strong upsell. Cash conversion on upsell promo continues to prove challenging.</li>
-            </ul>
-          </div>
-          <div class="key-insights" style="background:#fef5e7; border-left-color:#f6ad55;">
-            <h3 style="font-size:16px; margin-bottom:12px;">Action Items</h3>
-            <ul style="font-size:13px; line-height:1.6;">
-              <li><strong>Pricing Optimization:</strong> Implement tiered pricing to better capture value across customer segments</li>
-              <li><strong>Onboarding Enhancement:</strong> Reduce early churn through improved activation flows</li>
-              <li><strong>Retention Team:</strong> Dedicated team resources on retention and renewal programs</li>
-              <li><strong>Segment Focus:</strong> Team growth and Identify and target higher-value customer profiles</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 6 -->
-      <div class="slide" aria-hidden="true">
-        <div class="slide-header">
-          <h2>Enterprise Segment Performance</h2>
-          <p class="subtitle">Monthly Cohort Analysis & Trends</p>
-        </div>
-        <div style="display:grid; grid-template-columns:60% 40%; gap:20px;">
-          <div style="background:#f7fafc; border-radius:12px; padding:15px;">
-            <!-- (table kept the same as provided) -->
-          </div>
-          <div>
-            <!-- right side blocks kept the same -->
-          </div>
-        </div>
-        <div style="margin-top:20px; display:grid; grid-template-columns:60% 40%; gap:20px;">
-          <div class="key-insights">
-            <!-- kept the same -->
-          </div>
-          <div class="key-insights" style="background:#fef5e7; border-left-color:#f6ad55;">
-            <!-- kept the same -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 7 -->
-      <div class="slide" aria-hidden="true">
-        <div class="slide-header">
-          <h2>Geographic Distribution & Growth</h2>
-          <p class="subtitle">Regional MRR Performance Analysis</p>
-        </div>
-        <!-- (table + metric cards kept the same) -->
-        <table class="data-table">
-          <!-- ... your table content unchanged ... -->
-        </table>
-        <div class="metrics-grid">
-          <!-- ... your cards unchanged ... -->
-        </div>
-      </div>
-
-      <!-- Slide 8 -->
-      <div class="slide" aria-hidden="true">
-        <div class="slide-header">
-          <h2>Strategic Priorities & Recommendations</h2>
-          <p class="subtitle">CFO Action Plan</p>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; margin:30px 0;">
-          <div class="key-insights">
-            <h3>Immediate Priorities</h3>
-            <ul>
-              <li><strong>E-Commerce ARPU:</strong> Implement value-based pricing to address ARPU decline</li>
-              <li><strong>Amazon Retention:</strong> Maintain NRR above 100% through expansion revenue</li>
-              <li><strong>Global Onboarding:</strong> Go live in September to accelerate Stripe and client onboarding</li>
-            </ul>
-          </div>
-          <div class="executive-summary">
-            <h3>Financial Outlook & Targets</h3>
-            <div class="summary-grid">
-              <div class="summary-item">
-                <div class="summary-label">Q4 2025 ARR Target</div>
-                <div class="summary-value">€21M</div>
-                <span class="growth-indicator growth-positive">+45%</span>
-              </div>
-              <div class="summary-item">
-                <div class="summary-label">2025 NRR Goal</div>
-                <div class="summary-value">&gt;105%</div>
-                <span class="growth-indicator growth-positive">Focus on Expansion</span>
-              </div>
-              <div class="summary-item">
-                <div class="summary-label">Customer Target</div>
-                <div class="summary-value">9,000</div>
-                <span class="growth-indicator growth-positive">+43% from current</span>
-              </div>
+            <!-- Slide 8: Strategic Priorities & Recommendations -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Strategic Priorities & Recommendations</h2>
+                    <p class="subtitle">CFO Action Plan</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0;">
+                    <div class="key-insights">
+                        <h3>Immediate Priorities</h3>
+                        <ul>
+                            <li><strong>Stripe Scaling:</strong> Invest in infrastructure to support 200%+ growth trajectory</li>
+                            <li><strong>E-Commerce ARPU:</strong> Implement value-based pricing to address -15.4% ARPU decline</li>
+                            <li><strong>Amazon Retention:</strong> Maintain NRR above 100% through expansion revenue</li>
+                            <li><strong>Group Audit & Funding:</strong> Close group audit of THL consolidation and obtain funding for WC and IT requirement</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="key-insights">
+                        <h3>Risk Mitigation</h3>
+                        <ul>
+                            <li><strong>Customer Concentration:</strong> Amazon represents 37% of MRR - diversify revenue base</li>
+                            <li><strong>Churn Management:</strong> Monitor E-Commerce segment for quality issues</li>
+                            <li><strong>Market Saturation:</strong> Germany showing negative growth - investigate causes</li>
+                            <li><strong>Pricing Strategy:</strong> Balance growth with unit economics in Stripe segment</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="executive-summary">
+                    <h3>Financial Outlook & Targets</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="summary-label">Q4 2025 ARR Target</div>
+                            <div class="summary-value">€16.5M</div>
+                            <span class="growth-indicator growth-positive">+14.5%</span>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">2025 NRR Goal</div>
+                            <div class="summary-value">&gt;105%</div>
+                            <span class="growth-indicator growth-positive">Focus on Expansion</span>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Customer Target</div>
+                            <div class="summary-value">7,500</div>
+                            <span class="growth-indicator growth-positive">+21% from current</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="key-insights" style="background: #fef5e7; border-left-color: #f6ad55;">
+                    <h3>Board Recommendations</h3>
+                    <ul>
+                        <li><strong>Capital Allocation:</strong> Prioritize investment in high-growth segments (Stripe, E-Commerce)</li>
+                        <li><strong>M&A Strategy:</strong> Consider acquisitions to accelerate European expansion</li>
+                        <li><strong>Product Investment:</strong> Enhance Enterprise offering to justify premium pricing</li>
+                        <li><strong>Sales Efficiency:</strong> Optimize CAC payback period across all segments</li>
+                        <li><strong>Operational Excellence:</strong> Implement automated billing to support scale</li>
+                    </ul>
+                </div>
             </div>
-          </div>
         </div>
-      </div> <!-- END Slide 8 -->
-    </div> <!-- END slides-wrapper -->
-
-    <!-- NAVIGATION BAR (outside slides for consistent placement) -->
-    <div class="navigation" role="navigation" aria-label="Slides navigation">
-      <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)" aria-label="Previous slide">← Previous</button>
-      <div class="nav-center">
-        <span class="slide-counter" id="slideCounter" aria-live="polite">1 / 8</span>
-        <div class="nav-dots" id="navDots" aria-label="Slide picker"></div>
-      </div>
-      <button class="nav-button" id="nextBtn" onclick="changeSlide(1)" aria-label="Next slide">Next →</button>
+        
+        <!-- NAVIGATION BAR - HIGHLY VISIBLE -->
+        <div class="navigation">
+            <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+            <span class="slide-counter" id="slideCounter">1 / 8</span>
+            <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+        </div>
     </div>
-  </div> <!-- END presentation-container -->
 
-  <script>
-    // Navigation logic (hash support, dots, keyboard, touch)
-    (function () {
-      const slides = Array.from(document.getElementsByClassName('slide'));
-      const totalSlides = slides.length; // should be 8
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-      const slideCounter = document.getElementById('slideCounter');
-      const dotsContainer = document.getElementById('navDots');
-      const wrapper = document.querySelector('.slides-wrapper');
-      let currentSlide = 1;
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 8;
 
-      // Build clickable dots 1..N
-      function buildDots() {
-        dotsContainer.innerHTML = '';
-        for (let i = 1; i <= totalSlides; i++) {
-          const dot = document.createElement('button');
-          dot.className = 'nav-dot';
-          dot.type = 'button';
-          dot.title = 'Go to slide ' + i;
-          dot.setAttribute('aria-label', 'Go to slide ' + i);
-          dot.addEventListener('click', () => showSlide(i));
-          dotsContainer.appendChild(dot);
+        function showSlide(n) {
+            const slides = document.getElementsByClassName("slide");
+            const prevBtn = document.getElementById("prevBtn");
+            const nextBtn = document.getElementById("nextBtn");
+            const slideCounter = document.getElementById("slideCounter");
+            
+            if (n > totalSlides) { currentSlide = totalSlides; }
+            if (n < 1) { currentSlide = 1; }
+            
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove("active");
+            }
+            
+            slides[currentSlide - 1].classList.add("active");
+            slideCounter.textContent = `${currentSlide} / ${totalSlides}`;
+            
+            prevBtn.disabled = currentSlide === 1;
+            nextBtn.disabled = currentSlide === totalSlides;
         }
-      }
 
-      function updateUI() {
-        slides.forEach((el, idx) => {
-          const isActive = idx === currentSlide - 1;
-          el.classList.toggle('active', isActive);
-          el.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+        function changeSlide(n) {
+            currentSlide += n;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight') {
+                changeSlide(1);
+            }
         });
 
-        slideCounter.textContent = `${currentSlide} / ${totalSlides}`;
-        prevBtn.disabled = currentSlide === 1;
-        nextBtn.disabled = currentSlide === totalSlides;
-
-        const dots = dotsContainer.querySelectorAll('.nav-dot');
-        dots.forEach((d, i) => {
-          d.classList.toggle('active', i === currentSlide - 1);
-          d.setAttribute('aria-current', i === currentSlide - 1 ? 'true' : 'false');
-        });
-      }
-
-      function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
-
-      function showSlide(n, { updateHash = true } = {}) {
-        currentSlide = clamp(n, 1, totalSlides);
-        updateUI();
-        if (updateHash) {
-          // Replace state so the page doesn't jump and back button stays clean
-          history.replaceState(null, '', `#${currentSlide}`);
-        }
-      }
-
-      function changeSlide(delta) { showSlide(currentSlide + delta); }
-
-      // Expose next/prev to inline handlers
-      window.changeSlide = changeSlide;
-
-      // Keyboard navigation (ignore when typing in inputs)
-      document.addEventListener('keydown', (e) => {
-        const tag = (document.activeElement && document.activeElement.tagName) || '';
-        if (['INPUT','TEXTAREA','SELECT'].includes(tag)) return;
-
-        switch (e.key) {
-          case 'ArrowLeft': case 'PageUp': e.preventDefault(); changeSlide(-1); break;
-          case 'ArrowRight': case 'PageDown': e.preventDefault(); changeSlide(1); break;
-          case 'Home': e.preventDefault(); showSlide(1); break;
-          case 'End': e.preventDefault(); showSlide(totalSlides); break;
-          default:
-            if (/^[1-8]$/.test(e.key)) { e.preventDefault(); showSlide(parseInt(e.key,10)); }
-        }
-      });
-
-      // Touch swipe (mobile)
-      let startX = null;
-      wrapper.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches.length === 1) startX = e.touches[0].clientX;
-      }, { passive: true });
-      wrapper.addEventListener('touchend', (e) => {
-        if (startX == null) return;
-        const diff = (e.changedTouches && e.changedTouches[0].clientX) - startX;
-        if (Math.abs(diff) > 40) changeSlide(diff < 0 ? 1 : -1);
-        startX = null;
-      }, { passive: true });
-
-      // Hash deep link support (#1..#8)
-      function getIndexFromHash() {
-        const m = location.hash.match(/^#(\d{1,2})$/);
-        const idx = m ? parseInt(m[1], 10) : NaN;
-        return (idx >= 1 && idx <= totalSlides) ? idx : 1;
-      }
-      window.addEventListener('hashchange', () => {
-        const idx = getIndexFromHash();
-        showSlide(idx, { updateHash: false });
-      });
-
-      // Init
-      buildDots();
-      showSlide(getIndexFromHash(), { updateHash: true });
-    })();
-  </script>
+        // Initialize
+        showSlide(currentSlide);
+    </script>
 </body>
 </html>
+
 
 
 
