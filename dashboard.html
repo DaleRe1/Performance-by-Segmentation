@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Performance Dashboard | October 2025</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #2d3748;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            color: #718096;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+        }
+
+        .kpi-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+
+        .kpi-change {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .kpi-change.positive {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .kpi-change.negative {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 16px;
+        }
+
+        .segment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .segment-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .segment-header {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .segment-metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .segment-metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-size: 14px;
+            color: #1a202c;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SaaS Performance Dashboard</h1>
+            <p>Monthly Recurring Revenue Analysis | January - October 2025</p>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Current MRR</div>
+                <div class="kpi-value">€1.19M</div>
+                <span class="kpi-change positive">+10.1% YTD</span>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Annual Run Rate</div>
+                <div class="kpi-value">€14.3M</div>
+                <span class="kpi-change positive">+10.1% YTD</span>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Active Customers</div>
+                <div class="kpi-value">6,342</div>
+                <span class="kpi-change positive">+524 YTD</span>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Average ARPU</div>
+                <div class="kpi-value">€188</div>
+                <span class="kpi-change positive">Avg NRR 99.1%</span>
+            </div>
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-title">Annual Recurring Revenue (ARR) by Segment</div>
+                <canvas id="arrChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Active Customers by Segment</div>
+                <canvas id="customersChart"></canvas>
+            </div>
+        </div>
+
+        <div class="segment-grid">
+            <div class="segment-card">
+                <div class="segment-header">Amazon</div>
+                <div class="segment-metric">
+                    <span class="metric-label">MRR</span>
+                    <span class="metric-value">€437,425</span>
+                </div>
+                <div class="segment-metric">
+                    <span class="metric-label">Customers</span>
+                    <span class="metric-value">4,254</span>
+                </div>
+                <div class="segment-metric">
+                    <span class="metric-label">ARPU</span>
+                    <span class="metric-value">€102.83</span>
+                </div>
+                <div class="segment-metric">
+                    <span class="metric-label">NRR</span>
+                    <span class="metric-value">99.0%</span>
+                </div>
+            </div>
+
+            <div class="segment-card">
+                <div class="segment-header">E-Commerce</div>
+                <div class="segment-metric">
+                    <span class="metric-label">MRR</span>
+                    <span class="metric-value">€380,791</span>
+                </div>
+                <div class="segment-metric">
+                    <span class="metric-label">Customers</span>
+                    <span class="metric-value">1,797</span>
+                </div>
+                <div class="segment-metric">
+                    <span class="metric-label">ARPU</span>
+                    <span class="metric-value">€211.90</span>
+                </div>
+                <div class="segment-metric">
+                    <span class="metric-label">NRR</span>
+                    <span class="metric-value">98.0%</span>
+                </div>
+            </div>
+
+            <div class="segment-card">
+                <div class="segment-header">Enterprise</div>
+                <div class="segment-metric">
+                    <span class="metric-label">MRR</span>
+                    <span class="metric-value">€317,939</span>
+                </div>
+                <div class="segment-metric">
+                    <span class="metric-label">Customers</span>
+                    <span class="metric-value">68</span>
+                </div>
+                <div class="segment-metric">
+                    <span class="metric-label">ARPU</span>
+                    <span class="metric-value">€4675.57</span>
+                </div>
+                <div class="segment-metric">
+                    <span class="metric-label">NRR</span>
+                    <span class="metric-value">100.0%</span>
+                </div>
+            </div>
+
+            <div class="segment-card">
+                <div class="segment-header">Stripe</div>
+                <div class="segment-metric">
+                    <span class="metric-label">MRR</span>
+                    <span class="metric-value">€57,536</span>
+                </div>
+                <div class="segment-metric">
+                    <span class="metric-label">Customers</span>
+                    <span class="metric-value">223</span>
+                </div>
+                <div class="segment-metric">
+                    <span class="metric-label">ARPU</span>
+                    <span class="metric-value">€258.01</span>
+                </div>
+                <div class="segment-metric">
+                    <span class="metric-label">NRR</span>
+                    <span class="metric-value">100.0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dashboardData = {
+        "months": [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct"
+        ],
+        "consolidated": {
+                "mrr": [
+                        1084494.6571000002,
+                        1090054.9883,
+                        1103633.5289333332,
+                        1129802.2554333333,
+                        1128066.7273333333,
+                        1139411.2775333333,
+                        1152879.9160333336,
+                        1156343.6848,
+                        1175607.5846,
+                        1193691.0509666665
+                ],
+                "customers": [
+                        5818,
+                        5777,
+                        5931,
+                        5974,
+                        5987,
+                        6042,
+                        6096,
+                        6152,
+                        6241,
+                        6342
+                ],
+                "arpu": [
+                        186.4033442935717,
+                        188.6887637701229,
+                        186.07882801101556,
+                        189.11989545251646,
+                        188.41936317576972,
+                        188.58180694030673,
+                        189.12072113407703,
+                        187.96223745123535,
+                        188.36846412433903,
+                        188.2199701934195
+                ],
+                "nrr": [
+                        99.07152398852729,
+                        98.27744141300175,
+                        98.64950125772684,
+                        99.8032753587961,
+                        98.52138983440135,
+                        99.71089838739333,
+                        99.0827886728816,
+                        98.8318195492261,
+                        99.87423268539305,
+                        99.01858594785617
+                ],
+                "new_mrr": [
+                        20267.3557,
+                        23660.609600000003,
+                        26471.173700000007,
+                        26109.3461,
+                        13394.844900000004,
+                        12637.905300000004,
+                        22036.811300000005,
+                        15021.574966666667,
+                        19012.5288,
+                        27157.884499999996
+                ],
+                "churned_mrr": [
+                        9900.497010567133,
+                        20031.4206,
+                        8726.828000000003,
+                        11180.787199999999,
+                        12472.935000000005,
+                        7597.281100000001,
+                        9945.161700000004,
+                        11348.010200000002,
+                        7661.204100000001,
+                        8056.747700000004
+                ],
+                "net_expansion": [
+                        -73.20158943287288,
+                        1348.6421999999623,
+                        -5993.964700000036,
+                        9009.668099999963,
+                        -4232.436000000015,
+                        4336.022000000005,
+                        -505.64759999999,
+                        -2119.70760000001,
+                        6206.901700000024,
+                        -3480.830333333334
+                ]
+        },
+        "segments": {
+                "Amazon": {
+                        "mrr": [
+                                426809.0,
+                                423026.64749999996,
+                                424547.2472333333,
+                                427334.1157333334,
+                                423560.12123333325,
+                                426311.7264333334,
+                                429367.1886333334,
+                                430023.43533333327,
+                                432827.2515333333,
+                                437425.4592
+                        ],
+                        "customers": [
+                                4321,
+                                4246,
+                                4299,
+                                4264,
+                                4231,
+                                4246,
+                                4239,
+                                4253,
+                                4256,
+                                4254
+                        ],
+                        "arpu": [
+                                98.7755149271002,
+                                99.62945065944417,
+                                98.75488421338295,
+                                100.21907029393373,
+                                100.10874999606081,
+                                100.40313858533524,
+                                101.2897354643391,
+                                101.11061258719334,
+                                101.69813240914787,
+                                102.8268592383639
+                        ],
+                        "nrr": [
+                                97.66869158878505,
+                                97.26820582508803,
+                                98.15489208135983,
+                                99.35731157891587,
+                                98.23804736790578,
+                                99.6717723812261,
+                                99.72562108253832,
+                                99.00924073552514,
+                                99.88029998885968,
+                                99.01900774078078
+                        ]
+                },
+                "E-Commerce": {
+                        "mrr": [
+                                321528.6803,
+                                325383.1548,
+                                331158.4823,
+                                338719.7043,
+                                340636.6305,
+                                346914.8244,
+                                354945.7302,
+                                358144.5046666667,
+                                371830.4780666666,
+                                380790.7367666667
+                        ],
+                        "customers": [
+                                1270,
+                                1281,
+                                1371,
+                                1434,
+                                1475,
+                                1515,
+                                1580,
+                                1617,
+                                1696,
+                                1797
+                        ],
+                        "arpu": [
+                                253.1721892125984,
+                                254.0071466042155,
+                                241.5452095550693,
+                                236.206209414226,
+                                230.9400884745762,
+                                228.9866827722772,
+                                224.6491963291139,
+                                221.4870158730159,
+                                219.2396686713836,
+                                211.9035819514005
+                        ],
+                        "nrr": [
+                                99.85311953416148,
+                                97.39763355101235,
+                                98.09878771880418,
+                                98.61607068972847,
+                                97.53488610376068,
+                                99.0960530300337,
+                                98.13297324171656,
+                                98.20646618388312,
+                                99.82844455464371,
+                                98.03900523757156
+                        ]
+                },
+                "Enterprise": {
+                        "mrr": [
+                                301234.0,
+                                301340.0,
+                                301460.0,
+                                307729.0,
+                                306828.0,
+                                306316.0,
+                                310532.0,
+                                312397.0,
+                                313414.0,
+                                317939.0
+                        ],
+                        "customers": [
+                                60,
+                                60,
+                                61,
+                                62,
+                                62,
+                                62,
+                                63,
+                                64,
+                                66,
+                                68
+                        ],
+                        "arpu": [
+                                5020.566666666667,
+                                5022.333333333333,
+                                4941.9672131147545,
+                                4963.370967741936,
+                                4948.8387096774195,
+                                4940.580645161291,
+                                4929.079365079365,
+                                4881.203125,
+                                4748.69696969697,
+                                4675.573529411765
+                        ],
+                        "nrr": [
+                                100.11590715191315,
+                                99.86659321550174,
+                                99.8035252612749,
+                                99.29343859881908,
+                                99.7072099152176,
+                                99.83313126572543,
+                                100.00979380770185,
+                                100.0,
+                                99.67509291062335,
+                                100.0
+                        ]
+                },
+                "Stripe": {
+                        "mrr": [
+                                34922.9768,
+                                40305.185999999994,
+                                46467.799399999996,
+                                56019.435399999995,
+                                57041.97559999999,
+                                59868.72669999999,
+                                58034.997200000005,
+                                55778.74480000001,
+                                57535.855,
+                                57535.855
+                        ],
+                        "customers": [
+                                167,
+                                190,
+                                200,
+                                214,
+                                219,
+                                219,
+                                214,
+                                218,
+                                223,
+                                223
+                        ],
+                        "arpu": [
+                                209.11962155688622,
+                                212.1325578947368,
+                                232.33899699999998,
+                                261.7730626168224,
+                                260.46564200913235,
+                                273.37318127853877,
+                                271.1915757009346,
+                                255.86580183486242,
+                                258.0083183856502,
+                                258.0083183856502
+                        ],
+                        "nrr": [
+                                NaN,
+                                104.99991598654329,
+                                99.65944183956876,
+                                115.64609534748055,
+                                100.13366825185817,
+                                103.01559804320661,
+                                95.26613082285581,
+                                95.09321782133212,
+                                101.23676519160394,
+                                100.0
+                        ]
+                }
+        },
+        "kpis": {
+                "current_mrr": 1193691.0509666665,
+                "mrr_growth": 109196.39386666636,
+                "mrr_growth_pct": 10.068873382803348,
+                "current_arr": 14324292.611599999,
+                "current_customers": 6342,
+                "customer_growth": 524,
+                "customer_growth_pct": 9.006531454107941,
+                "avg_arpu": 188.2199701934195,
+                "avg_nrr": 99.08414570952036
+        },
+        "segment_comparison": {
+                "Amazon": {
+                        "mrr": 437425.4592,
+                        "customers": 4254,
+                        "arpu": 102.8268592383639,
+                        "nrr": 99.01900774078078
+                },
+                "E-Commerce": {
+                        "mrr": 380790.7367666667,
+                        "customers": 1797,
+                        "arpu": 211.9035819514005,
+                        "nrr": 98.03900523757156
+                },
+                "Enterprise": {
+                        "mrr": 317939.0,
+                        "customers": 68,
+                        "arpu": 4675.573529411765,
+                        "nrr": 100.0
+                },
+                "Stripe": {
+                        "mrr": 57535.855,
+                        "customers": 223,
+                        "arpu": 258.0083183856502,
+                        "nrr": 100.0
+                }
+        }
+};
+
+        // ARR Chart (Stacked Bar)
+        const arrCtx = document.getElementById('arrChart').getContext('2d');
+        // Convert MRR to ARR (multiply by 12)
+        const arrData = {
+            Amazon: dashboardData.segments.Amazon.mrr.map(v => v * 12),
+            'E-Commerce': dashboardData.segments['E-Commerce'].mrr.map(v => v * 12),
+            Enterprise: dashboardData.segments.Enterprise.mrr.map(v => v * 12),
+            Stripe: dashboardData.segments.Stripe.mrr.map(v => v * 12)
+        };
+
+        new Chart(arrCtx, {
+            type: 'bar',
+            data: {
+                labels: dashboardData.months,
+                datasets: [
+                    {
+                        label: 'Amazon',
+                        data: arrData.Amazon,
+                        backgroundColor: '#f59e0b'
+                    },
+                    {
+                        label: 'E-Commerce',
+                        data: arrData['E-Commerce'],
+                        backgroundColor: '#10b981'
+                    },
+                    {
+                        label: 'Enterprise',
+                        data: arrData.Enterprise,
+                        backgroundColor: '#6366f1'
+                    },
+                    {
+                        label: 'Stripe',
+                        data: arrData.Stripe,
+                        backgroundColor: '#ec4899'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += '€' + (context.parsed.y / 1000000).toFixed(2) + 'M';
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '€' + (value/1000000).toFixed(1) + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Customers Chart
+        const customersCtx = document.getElementById('customersChart').getContext('2d');
+        new Chart(customersCtx, {
+            type: 'bar',
+            data: {
+                labels: dashboardData.months,
+                datasets: [
+                    {
+                        label: 'Amazon',
+                        data: dashboardData.segments.Amazon.customers,
+                        backgroundColor: '#f59e0b'
+                    },
+                    {
+                        label: 'E-Commerce',
+                        data: dashboardData.segments['E-Commerce'].customers,
+                        backgroundColor: '#10b981'
+                    },
+                    {
+                        label: 'Enterprise',
+                        data: dashboardData.segments.Enterprise.customers,
+                        backgroundColor: '#6366f1'
+                    },
+                    {
+                        label: 'Stripe',
+                        data: dashboardData.segments.Stripe.customers,
+                        backgroundColor: '#ec4899'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>

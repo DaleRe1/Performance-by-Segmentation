@@ -1,0 +1,64 @@
+# Python
+*.py
+*.pyc
+__pycache__/
+*.pkl
+
+# Excel files
+*.xlsx
+*.xls
+
+# Data files
+dashboard_data.json
+dashboard_data_updated.json
+
+# PowerShell scripts
+*.ps1
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Windows system files
+NTUSER.DAT*
+ntuser.dat*
+*.blf
+*.regtrans-ms
+
+# Windows user directories
+AppData/
+Contacts/
+Desktop/
+Documents/
+Downloads/
+Favorites/
+IntelGraphicsProfiles/
+Links/
+Music/
+Pictures/
+Videos/
+"Saved Games"/
+Searches/
+OneDrive*/
+"Application Data"/
+Cookies/
+"Local Settings"/
+"My Documents"/
+NetHood/
+PrintHood/
+Recent/
+SendTo/
+"Start Menu"/
+Templates/
+
+# Project files to keep
+!vercel.json
+!README.md
+!.gitignore
