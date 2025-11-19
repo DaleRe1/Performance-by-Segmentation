@@ -203,8 +203,19 @@
                 <canvas id="arrChart"></canvas>
             </div>
             <div class="chart-card">
+                <div class="chart-title">ARR Growth Journey to €14.3M</div>
+                <canvas id="arrLineChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-card">
                 <div class="chart-title">Active Customers by Segment</div>
                 <canvas id="customersChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Segment ARR Contribution</div>
+                <canvas id="segmentArrChart"></canvas>
             </div>
         </div>
 
@@ -706,6 +717,110 @@
             }
         });
 
+        // ARR Line Chart (Growth Journey)
+        const arrLineCtx = document.getElementById('arrLineChart').getContext('2d');
+        new Chart(arrLineCtx, {
+            type: 'line',
+            data: {
+                labels: dashboardData.months,
+                datasets: [
+                    {
+                        label: 'Amazon ARR',
+                        data: arrData.Amazon,
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        tension: 0.4,
+                        fill: false,
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'E-Commerce ARR',
+                        data: arrData['E-Commerce'],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: false,
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'Enterprise ARR',
+                        data: arrData.Enterprise,
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        tension: 0.4,
+                        fill: false,
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'Stripe ARR',
+                        data: arrData.Stripe,
+                        borderColor: '#ec4899',
+                        backgroundColor: 'rgba(236, 72, 153, 0.1)',
+                        tension: 0.4,
+                        fill: false,
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'Total ARR',
+                        data: arrData.Amazon.map((val, idx) =>
+                            arrData.Amazon[idx] +
+                            arrData['E-Commerce'][idx] +
+                            arrData.Enterprise[idx] +
+                            arrData.Stripe[idx]
+                        ),
+                        borderColor: '#1f2937',
+                        backgroundColor: 'rgba(31, 41, 55, 0.1)',
+                        tension: 0.4,
+                        fill: false,
+                        borderWidth: 4,
+                        borderDash: [5, 5]
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += '€' + (context.parsed.y / 1000000).toFixed(2) + 'M';
+                                return label;
+                            },
+                            footer: function(tooltipItems) {
+                                if (tooltipItems.length > 0) {
+                                    const idx = tooltipItems[0].dataIndex;
+                                    const total = arrData.Amazon[idx] +
+                                                arrData['E-Commerce'][idx] +
+                                                arrData.Enterprise[idx] +
+                                                arrData.Stripe[idx];
+                                    return 'Total: €' + (total / 1000000).toFixed(2) + 'M';
+                                }
+                                return '';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '€' + (value/1000000).toFixed(1) + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
         // Customers Chart
         const customersCtx = document.getElementById('customersChart').getContext('2d');
         new Chart(customersCtx, {
@@ -750,6 +865,104 @@
                     y: {
                         stacked: true,
                         beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Segment ARR Contribution Chart (Percentage Area)
+        const segmentArrCtx = document.getElementById('segmentArrChart').getContext('2d');
+
+        // Calculate total ARR for each month
+        const totalArrByMonth = arrData.Amazon.map((val, idx) =>
+            arrData.Amazon[idx] +
+            arrData['E-Commerce'][idx] +
+            arrData.Enterprise[idx] +
+            arrData.Stripe[idx]
+        );
+
+        // Calculate percentage contribution for each segment
+        const amazonPercent = arrData.Amazon.map((val, idx) => (val / totalArrByMonth[idx]) * 100);
+        const ecommercePercent = arrData['E-Commerce'].map((val, idx) => (val / totalArrByMonth[idx]) * 100);
+        const enterprisePercent = arrData.Enterprise.map((val, idx) => (val / totalArrByMonth[idx]) * 100);
+        const stripePercent = arrData.Stripe.map((val, idx) => (val / totalArrByMonth[idx]) * 100);
+
+        new Chart(segmentArrCtx, {
+            type: 'line',
+            data: {
+                labels: dashboardData.months,
+                datasets: [
+                    {
+                        label: 'Amazon',
+                        data: amazonPercent,
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.3)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'E-Commerce',
+                        data: ecommercePercent,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.3)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Enterprise',
+                        data: enterprisePercent,
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.3)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Stripe',
+                        data: stripePercent,
+                        borderColor: '#ec4899',
+                        backgroundColor: 'rgba(236, 72, 153, 0.3)',
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += context.parsed.y.toFixed(1) + '%';
+
+                                // Add actual ARR value
+                                const idx = context.dataIndex;
+                                const arrValue = context.datasetIndex === 0 ? arrData.Amazon[idx] :
+                                               context.datasetIndex === 1 ? arrData['E-Commerce'][idx] :
+                                               context.datasetIndex === 2 ? arrData.Enterprise[idx] :
+                                               arrData.Stripe[idx];
+                                label += ' (€' + (arrValue / 1000000).toFixed(2) + 'M)';
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 50,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toFixed(0) + '%';
+                            }
+                        }
                     }
                 }
             }

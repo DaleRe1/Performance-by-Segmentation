@@ -19,6 +19,10 @@ Interactive dashboard displaying key SaaS metrics across 4 segments:
 
 ## Features
 
+- **ARR Stacked Bar Chart** - Annual Recurring Revenue by segment
+- **ARR Growth Journey** - Line chart showing path to €14.3M with segment breakdown
+- **Customer Growth** - Stacked bar chart by segment
+- **ARR Contribution** - Percentage contribution by segment over time
 - Interactive charts with Chart.js
 - Real-time segment comparison
 - Responsive design for all devices
